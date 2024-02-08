@@ -1,0 +1,72 @@
+{% extends 'dashboard/base.html' %} {% load static %} {% block content %}
+
+<style>
+  .middle-label {
+    display: flex;
+    align-items: center;
+  }
+
+  .middle-label label {
+    margin-bottom: 0;
+    margin-right: 10px;
+  }
+  .head {
+    margin: 3%;
+  }
+
+  .card {
+    margin-bottom: 20px; /* Adjust the margin as needed */
+  }
+</style>
+
+<div class="container">
+  <div class="row">
+    {% for note in notes %}
+    <div class="col-md-3">
+      <a href="{% url 'notes-detail' note.id %}">
+        <div class="card">
+          <div class="card-header">{{note.title}}</div>
+          <div class="card-body">{{note.description|slice:"0:100"}}</div>
+          <div class="card-footer mt-auto">
+            <a href="{% url 'delete-note' note.id %}">
+              <i class="fa fa-trash fa-2x"></i
+            ></a>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="container">
+  <form method="POST">
+    {% csrf_token %}
+
+    <fieldset class="form-group head">
+      <legend class="border-bottom mb-4">Create Notes</legend>
+    </fieldset>
+
+    <div class="form-group">
+      <label for="{{ form.title.id_for_label }}">Title:</label>
+      {{ form.title }} {% if form.title.errors %}
+      <div class="invalid-feedback">{{ form.title.errors|join:", " }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-group middle-label">
+      <label for="{{ form.description.id_for_label }}">Content:</label>
+      {{ form.description }} {% if form.description.errors %}
+      <div class="invalid-feedback">
+        {{ form.description.errors|join:", " }}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <button class="btn btn-outline-info" type="submit">Create</button>
+    </div>
+  </form>
+</div>
+
+{% endblock content %}
